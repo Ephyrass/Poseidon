@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Home</title>
+    <title th:insert="~{::title}">Poseidon</title>
     <link rel="stylesheet" href="/css/styles.css"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
 </head>
 <body>
+<div th:fragment="layout">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/home">Poseidon</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,14 +40,7 @@
             </ul>
         </div>
     </nav>
-
-    <div class="container mt-4">
-        <h3>HOME PAGE</h3>
-        <p>
-            <a href="/login">Login</a> or
-            <a href="/user/add">Create an account</a> or manage
-            <a href="/user/list">User management</a>
-        </p>
-    </div>
+    <div th:insert="~{::body}"></div>
+</div>
 </body>
 </html>

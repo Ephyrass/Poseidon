@@ -2,15 +2,17 @@ package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.repositories.RatingRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class RatingService {
-    @Autowired
-    private RatingRepository ratingRepository;
+    private final RatingRepository ratingRepository;
+
+    public RatingService(RatingRepository ratingRepository) {
+        this.ratingRepository = ratingRepository;
+    }
 
     public Rating save(Rating rating) {
         return ratingRepository.save(rating);
@@ -32,4 +34,3 @@ public class RatingService {
         return ratingRepository.existsById(id);
     }
 }
-

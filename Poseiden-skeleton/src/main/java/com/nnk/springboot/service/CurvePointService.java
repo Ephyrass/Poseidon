@@ -2,15 +2,17 @@ package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.repositories.CurvePointRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class CurvePointService {
-    @Autowired
-    private CurvePointRepository curvePointRepository;
+    private final CurvePointRepository curvePointRepository;
+
+    public CurvePointService(CurvePointRepository curvePointRepository) {
+        this.curvePointRepository = curvePointRepository;
+    }
 
     public CurvePoint save(CurvePoint curvePoint) {
         return curvePointRepository.save(curvePoint);
@@ -32,4 +34,3 @@ public class CurvePointService {
         return curvePointRepository.existsById(id);
     }
 }
-
