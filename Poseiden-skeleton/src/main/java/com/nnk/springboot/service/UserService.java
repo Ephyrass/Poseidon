@@ -7,7 +7,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-
+/**
+ * Service for user management with secure BCrypt encoding.
+ *
+ * This service handles password encoding consistently:
+ * - Plain text passwords are automatically encoded
+ * - Already encoded passwords are not re-encoded
+ * - Clear separation between creation and update
+ */
 @Service
 public class UserService {
 
@@ -20,22 +27,17 @@ public class UserService {
     }
 
     /**
-     * Saves a new user or updates an existing user.
-     * The password is automatically encoded with BCrypt before saving
-     * to ensure the security of authentication data.
+     * Saves a user by encoding the password if necessary.
+     * This method is used for creating users via the web interface.
      *
-     * @param user the user to save (must not be null)
-     * @return the saved user with its generated ID
-     * @throws IllegalArgumentException if the user is null
-     *
-     * @see PasswordEncoder#encode(CharSequence)
+     * @param user the user to save with a plain text password
+     * @return the saved user
      */
-    public User save(User user) {
+    public User saveWithPasswordEncoding(User user) {
         if (user == null) {
-            throw new IllegalArgumentException("L'utilisateur ne peut pas être null");
+            throw new IllegalArgumentException("User cannot be null");
         }
 
-        // Encoder le mot de passe avant la sauvegarde pour la sécurité
         if (user.getPassword() != null && !user.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
@@ -44,20 +46,32 @@ public class UserService {
     }
 
     /**
-     * Met à jour un utilisateur existant avec un nouveau mot de passe.
-     * Le nouveau mot de passe est encodé automatiquement avant la mise à jour.
+     * Saves a user without encoding the password.
+     * This method is used for initialization data that already has encoded passwords.
      *
-     * @param user l'utilisateur à mettre à jour
-     * @param newPassword le nouveau mot de passe en clair
-     * @return l'utilisateur mis à jour
-     * @throws IllegalArgumentException si l'utilisateur ou le mot de passe est null/vide
+     * @param user the user to save with an already encoded password
+     * @return the saved user
+     */
+    public User saveWithoutPasswordEncoding(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        return userRepository.save(user);
+    }
+
+    /**
+     * Updates a user with a new plain text password.
+     *
+     * @param user the user to update
+     * @param newPassword the new plain text password
+     * @return the updated user
      */
     public User updateUserWithNewPassword(User user, String newPassword) {
         if (user == null) {
-            throw new IllegalArgumentException("L'utilisateur ne peut pas être null");
+            throw new IllegalArgumentException("User cannot be null");
         }
         if (newPassword == null || newPassword.trim().isEmpty()) {
-            throw new IllegalArgumentException("Le nouveau mot de passe ne peut pas être vide");
+            throw new IllegalArgumentException("New password cannot be empty");
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));
@@ -65,81 +79,58 @@ public class UserService {
     }
 
     /**
-     * Recherche un utilisateur par son identifiant unique.
-     *
-     * @param id l'identifiant unique de l'utilisateur (ne doit pas être null)
-     * @return un Optional contenant l'utilisateur s'il existe, Optional.empty() sinon
-     * @throws IllegalArgumentException si l'identifiant est null
+     * Finds a user by their ID.
      */
     public Optional<User> findById(Integer id) {
         if (id == null) {
-            throw new IllegalArgumentException("L'identifiant ne peut pas être null");
+            throw new IllegalArgumentException("ID cannot be null");
         }
         return userRepository.findById(id);
     }
 
     /**
-     * Recherche un utilisateur par son nom d'utilisateur.
-     *
-     * @param username le nom d'utilisateur (ne doit pas être null ou vide)
-     * @return un Optional contenant l'utilisateur s'il existe, Optional.empty() sinon
-     * @throws IllegalArgumentException si le nom d'utilisateur est null ou vide
+     * Finds a user by their username.
      */
     public Optional<User> findByUsername(String username) {
         if (username == null || username.trim().isEmpty()) {
-            throw new IllegalArgumentException("Le nom d'utilisateur ne peut pas être vide");
+            throw new IllegalArgumentException("Username cannot be empty");
         }
         return userRepository.findByUsername(username);
     }
 
     /**
-     * Récupère tous les utilisateurs enregistrés dans le système.
-     *
-     * @return un Iterable contenant tous les utilisateurs
+     * Retrieves all users.
      */
     public Iterable<User> findAll() {
         return userRepository.findAll();
     }
 
     /**
-     * Supprime un utilisateur par son identifiant unique.
-     * La suppression est définitive et ne peut pas être annulée.
-     *
-     * @param id l'identifiant unique de l'utilisateur à supprimer (ne doit pas être null)
-     * @throws IllegalArgumentException si l'identifiant est null
+     * Deletes a user by their ID.
      */
     public void deleteById(Integer id) {
         if (id == null) {
-            throw new IllegalArgumentException("L'identifiant ne peut pas être null");
+            throw new IllegalArgumentException("ID cannot be null");
         }
         userRepository.deleteById(id);
     }
 
     /**
-     * Vérifie si un utilisateur existe avec l'identifiant donné.
-     *
-     * @param id l'identifiant unique de l'utilisateur (ne doit pas être null)
-     * @return true si l'utilisateur existe, false sinon
-     * @throws IllegalArgumentException si l'identifiant est null
+     * Checks if a user exists with the given ID.
      */
     public boolean existsById(Integer id) {
         if (id == null) {
-            throw new IllegalArgumentException("L'identifiant ne peut pas être null");
+            throw new IllegalArgumentException("ID cannot be null");
         }
         return userRepository.existsById(id);
     }
 
     /**
-     * Vérifie si un nom d'utilisateur est déjà utilisé dans le système.
-     * Utile pour valider l'unicité lors de la création d'un nouvel utilisateur.
-     *
-     * @param username le nom d'utilisateur à vérifier (ne doit pas être null ou vide)
-     * @return true si le nom d'utilisateur existe déjà, false sinon
-     * @throws IllegalArgumentException si le nom d'utilisateur est null ou vide
+     * Checks if a username already exists.
      */
     public boolean existsByUsername(String username) {
         if (username == null || username.trim().isEmpty()) {
-            throw new IllegalArgumentException("Le nom d'utilisateur ne peut pas être vide");
+            throw new IllegalArgumentException("Username cannot be empty");
         }
         return userRepository.findByUsername(username).isPresent();
     }

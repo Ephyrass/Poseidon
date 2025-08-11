@@ -20,11 +20,11 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests unitaires pour UserService.
- * Vérifie toutes les opérations CRUD et les fonctionnalités de sécurité.
+ * Unit tests for UserService.
+ * Verifies all CRUD operations and security features with the new methods.
  */
 @ExtendWith(MockitoExtension.class)
-@DisplayName("Tests UserService")
+@DisplayName("UserService Tests")
 class UserServiceTest {
 
     @Mock
@@ -50,8 +50,8 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Sauvegarder un utilisateur - Succès")
-    void save_WhenUserValid_ShouldSaveUserWithEncodedPassword() {
+    @DisplayName("Save with password encoding - Success")
+    void saveWithPasswordEncoding_WhenUserValid_ShouldSaveUserWithEncodedPassword() {
         // Given
         String rawPassword = "Password123!";
         String encodedPassword = "$2a$10$encodedPassword";
@@ -61,7 +61,7 @@ class UserServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(testUser);
 
         // When
-        User savedUser = userService.save(testUser);
+        User savedUser = userService.saveWithPasswordEncoding(testUser);
 
         // Then
         assertNotNull(savedUser);
@@ -71,18 +71,49 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Sauvegarder un utilisateur - Utilisateur null")
-    void save_WhenUserIsNull_ShouldThrowException() {
+    @DisplayName("Save with password encoding - Null user")
+    void saveWithPasswordEncoding_WhenUserIsNull_ShouldThrowException() {
         // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> userService.save(null)
+                () -> userService.saveWithPasswordEncoding(null)
         );
-        assertEquals("L'utilisateur ne peut pas être null", exception.getMessage());
+        assertEquals("User cannot be null", exception.getMessage());
     }
 
     @Test
-    @DisplayName("Mettre à jour le mot de passe - Succès")
+    @DisplayName("Save without password encoding - Success")
+    void saveWithoutPasswordEncoding_WhenUserValid_ShouldSaveUserDirectly() {
+        // Given
+        String alreadyEncodedPassword = "$2a$10$alreadyEncodedPassword";
+        testUser.setPassword(alreadyEncodedPassword);
+
+        when(userRepository.save(testUser)).thenReturn(testUser);
+
+        // When
+        User savedUser = userService.saveWithoutPasswordEncoding(testUser);
+
+        // Then
+        assertNotNull(savedUser);
+        assertEquals(testUser.getUsername(), savedUser.getUsername());
+        assertEquals(alreadyEncodedPassword, testUser.getPassword());
+        verify(userRepository).save(testUser);
+        verifyNoInteractions(passwordEncoder); // Verify that encoder is not called
+    }
+
+    @Test
+    @DisplayName("Save without password encoding - Null user")
+    void saveWithoutPasswordEncoding_WhenUserIsNull_ShouldThrowException() {
+        // When & Then
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> userService.saveWithoutPasswordEncoding(null)
+        );
+        assertEquals("User cannot be null", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Update user password - Success")
     void updateUserWithNewPassword_WhenValid_ShouldUpdatePassword() {
         // Given
         String newPassword = "NewPassword123!";
@@ -101,29 +132,29 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Mettre à jour le mot de passe - Utilisateur null")
+    @DisplayName("Update user password - Null user")
     void updateUserWithNewPassword_WhenUserIsNull_ShouldThrowException() {
         // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> userService.updateUserWithNewPassword(null, "password")
         );
-        assertEquals("L'utilisateur ne peut pas être null", exception.getMessage());
+        assertEquals("User cannot be null", exception.getMessage());
     }
 
     @Test
-    @DisplayName("Mettre à jour le mot de passe - Mot de passe vide")
+    @DisplayName("Update user password - Empty password")
     void updateUserWithNewPassword_WhenPasswordEmpty_ShouldThrowException() {
         // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> userService.updateUserWithNewPassword(testUser, "")
         );
-        assertEquals("Le nouveau mot de passe ne peut pas être vide", exception.getMessage());
+        assertEquals("New password cannot be empty", exception.getMessage());
     }
 
     @Test
-    @DisplayName("Trouver par ID - Utilisateur trouvé")
+    @DisplayName("Find by ID - User found")
     void findById_WhenUserExists_ShouldReturnUser() {
         // Given
         Integer userId = 1;
@@ -139,7 +170,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Trouver par ID - Utilisateur non trouvé")
+    @DisplayName("Find by ID - User not found")
     void findById_WhenUserNotExists_ShouldReturnEmpty() {
         // Given
         Integer userId = 99;
@@ -154,18 +185,18 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Trouver par ID - ID null")
+    @DisplayName("Find by ID - Null ID")
     void findById_WhenIdIsNull_ShouldThrowException() {
         // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> userService.findById(null)
         );
-        assertEquals("L'identifiant ne peut pas être null", exception.getMessage());
+        assertEquals("ID cannot be null", exception.getMessage());
     }
 
     @Test
-    @DisplayName("Trouver par nom d'utilisateur - Utilisateur trouvé")
+    @DisplayName("Find by username - User found")
     void findByUsername_WhenUserExists_ShouldReturnUser() {
         // Given
         String username = "testuser";
@@ -181,18 +212,18 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Trouver par nom d'utilisateur - Nom vide")
+    @DisplayName("Find by username - Empty username")
     void findByUsername_WhenUsernameEmpty_ShouldThrowException() {
         // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> userService.findByUsername("")
         );
-        assertEquals("Le nom d'utilisateur ne peut pas être vide", exception.getMessage());
+        assertEquals("Username cannot be empty", exception.getMessage());
     }
 
     @Test
-    @DisplayName("Trouver tous les utilisateurs")
+    @DisplayName("Find all users")
     void findAll_ShouldReturnAllUsers() {
         // Given
         User user2 = User.builder()
@@ -214,7 +245,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Supprimer par ID - Succès")
+    @DisplayName("Delete by ID - Success")
     void deleteById_WhenIdValid_ShouldDeleteUser() {
         // Given
         Integer userId = 1;
@@ -227,18 +258,18 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Supprimer par ID - ID null")
+    @DisplayName("Delete by ID - Null ID")
     void deleteById_WhenIdIsNull_ShouldThrowException() {
         // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> userService.deleteById(null)
         );
-        assertEquals("L'identifiant ne peut pas être null", exception.getMessage());
+        assertEquals("ID cannot be null", exception.getMessage());
     }
 
     @Test
-    @DisplayName("Vérifier existence par ID - Utilisateur existe")
+    @DisplayName("Check existence by ID - User exists")
     void existsById_WhenUserExists_ShouldReturnTrue() {
         // Given
         Integer userId = 1;
@@ -253,7 +284,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Vérifier existence par ID - Utilisateur n'existe pas")
+    @DisplayName("Check existence by ID - User does not exist")
     void existsById_WhenUserNotExists_ShouldReturnFalse() {
         // Given
         Integer userId = 99;
@@ -268,7 +299,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Vérifier existence par nom d'utilisateur - Utilisateur existe")
+    @DisplayName("Check existence by username - User exists")
     void existsByUsername_WhenUserExists_ShouldReturnTrue() {
         // Given
         String username = "testuser";
@@ -283,7 +314,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Vérifier existence par nom d'utilisateur - Utilisateur n'existe pas")
+    @DisplayName("Check existence by username - User does not exist")
     void existsByUsername_WhenUserNotExists_ShouldReturnFalse() {
         // Given
         String username = "nonexistent";

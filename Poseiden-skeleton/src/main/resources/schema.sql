@@ -1,7 +1,7 @@
 -- Création des tables pour l'application Poseidon
 
 CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     username VARCHAR(125) NOT NULL UNIQUE,
     password VARCHAR(125) NOT NULL,
     fullname VARCHAR(125) NOT NULL,
@@ -9,13 +9,13 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS BidList (
-    BidListId INT AUTO_INCREMENT PRIMARY KEY,
+    BidListId SERIAL PRIMARY KEY,
     account VARCHAR(30) NOT NULL,
     type VARCHAR(30) NOT NULL,
-    bidQuantity DOUBLE,
-    askQuantity DOUBLE,
-    bid DOUBLE,
-    ask DOUBLE,
+    bidQuantity DOUBLE PRECISION,
+    askQuantity DOUBLE PRECISION,
+    bid DOUBLE PRECISION,
+    ask DOUBLE PRECISION,
     benchmark VARCHAR(125),
     bidListDate TIMESTAMP,
     commentary VARCHAR(125),
@@ -32,13 +32,13 @@ CREATE TABLE IF NOT EXISTS BidList (
 );
 
 CREATE TABLE IF NOT EXISTS trade (
-    TradeId INT AUTO_INCREMENT PRIMARY KEY,
+    TradeId SERIAL PRIMARY KEY,
     account VARCHAR(30) NOT NULL,
     type VARCHAR(30) NOT NULL,
-    buyQuantity DOUBLE,
-    sellQuantity DOUBLE,
-    buyPrice DOUBLE,
-    sellPrice DOUBLE,
+    buyQuantity DOUBLE PRECISION,
+    sellQuantity DOUBLE PRECISION,
+    buyPrice DOUBLE PRECISION,
+    sellPrice DOUBLE PRECISION,
     tradeDate TIMESTAMP,
     security VARCHAR(125),
     status VARCHAR(10),
@@ -54,24 +54,24 @@ CREATE TABLE IF NOT EXISTS trade (
 );
 
 CREATE TABLE IF NOT EXISTS CurvePoint (
-    Id INT AUTO_INCREMENT PRIMARY KEY,
-    CurveId INT,
+    Id SERIAL PRIMARY KEY,
+    CurveId INTEGER,
     asOfDate TIMESTAMP,
-    term DOUBLE,
-    "value" DOUBLE,
+    term DOUBLE PRECISION,
+    "value" DOUBLE PRECISION,
     creationDate TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS Rating (
-    Id INT AUTO_INCREMENT PRIMARY KEY,
+    Id SERIAL PRIMARY KEY,
     moodysRating VARCHAR(125),
     sandPRating VARCHAR(125),
     fitchRating VARCHAR(125),
-    orderNumber INT
+    orderNumber INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS RuleName (
-    Id INT AUTO_INCREMENT PRIMARY KEY,
+    Id SERIAL PRIMARY KEY,
     name VARCHAR(125),
     description VARCHAR(125),
     json VARCHAR(125),
