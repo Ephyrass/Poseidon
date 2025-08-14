@@ -77,6 +77,7 @@ public class SecurityConfig {
                 .permitAll() // Accès libre à la page de connexion
             )
             .logout(logout -> logout
+                .logoutUrl("/logout") // URL explicite pour le logout
                 .logoutSuccessUrl("/login?logout") // Redirection après déconnexion
                 .invalidateHttpSession(true) // Invalider la session HTTP
                 .deleteCookies("JSESSIONID") // Supprimer le cookie de session

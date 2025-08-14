@@ -1,34 +1,165 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-      <title>Accès Refusé - Poseidon</title>
-      <meta charset="UTF-8">
-      <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <title>Access Denied - Poseidon</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-   <div class="container mt-5">
-       <div class="alert alert-danger" role="alert">
-           <h3>🚫 Accès Refusé</h3>
-           <p>Vous n'avez pas les permissions nécessaires pour accéder à cette ressource.</p>
-       </div>
+<body class="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-lg w-full space-y-8">
+        <!-- Error Icon -->
+        <div class="text-center">
+            <div class="mx-auto h-24 w-24 flex items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-orange-500 shadow-xl">
+                <span class="text-4xl">🚫</span>
+            </div>
+            <h1 class="mt-6 text-4xl font-extrabold text-gray-900">
+                Access Denied
+            </h1>
+            <p class="mt-2 text-lg text-gray-600">
+                Error 403 - Insufficient permissions
+            </p>
+        </div>
 
-       <div class="card">
-           <div class="card-body">
-               <h5 class="card-title">Que faire maintenant ?</h5>
-               <p class="card-text">
-                   • Vérifiez que vous êtes connecté avec le bon compte<br>
-                   • Contactez un administrateur si vous pensez que c'est une erreur<br>
-                   • Retournez à l'accueil pour naviguer vers une autre section
-               </p>
+        <!-- Error Card -->
+        <div class="bg-white shadow-2xl rounded-2xl p-8 space-y-6 border border-gray-100">
+            <!-- Main Message -->
+            <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-r-lg">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">
+                            Authorization Required
+                        </h3>
+                        <div class="mt-2 text-sm text-red-700">
+                            <p>You do not have the necessary permissions to access this resource.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-               <div class="mt-3">
-                   <a th:href="@{/home}" class="btn btn-primary">🏠 Retour à l'accueil</a>
-                   <form th:action="@{/logout}" method="POST" class="d-inline ms-2">
-                        <input type="submit" value="🚪 Se déconnecter" class="btn btn-secondary"/>
-                   </form>
-               </div>
-           </div>
-       </div>
-   </div>
+            <!-- Suggestions -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                    <svg class="h-5 w-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    What to do next?
+                </h3>
+
+                <div class="space-y-3">
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0 mt-1">
+                            <div class="h-2 w-2 bg-blue-400 rounded-full"></div>
+                        </div>
+                        <p class="text-gray-700">
+                            <strong>Check your connection:</strong> Make sure you are logged in with the correct user account
+                        </p>
+                    </div>
+
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0 mt-1">
+                            <div class="h-2 w-2 bg-blue-400 rounded-full"></div>
+                        </div>
+                        <p class="text-gray-700">
+                            <strong>Contact administration:</strong> If you think this is an error, contact an administrator
+                        </p>
+                    </div>
+
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0 mt-1">
+                            <div class="h-2 w-2 bg-blue-400 rounded-full"></div>
+                        </div>
+                        <p class="text-gray-700">
+                            <strong>Return to home:</strong> Navigate to an accessible section of the application
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-3 pt-6 border-t border-gray-200">
+                <a href="/home" class="w-full flex justify-center items-center py-3 px-4 border border-transparent text-base font-medium rounded-lg text-white bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    🏠 Back to home
+                </a>
+
+                <form th:action="@{/logout}" method="POST" class="w-full">
+                    <button type="submit" class="w-full flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-red-600 hover:border-red-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        🚪 Log out
+                    </button>
+                </form>
+
+                <a href="javascript:history.back()" class="w-full flex justify-center items-center py-2 px-4 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors duration-200">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Back to the previous page
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer Info -->
+        <div class="text-center">
+            <p class="text-xs text-gray-500">
+                If the problem persists, contact technical support
+            </p>
+        </div>
+    </div>
+
+    <!-- Animation CSS -->
+    <style>
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% {
+                transform: translate3d(0,0,0);
+            }
+            40%, 43% {
+                transform: translate3d(0, -8px, 0);
+            }
+            70% {
+                transform: translate3d(0, -4px, 0);
+            }
+            90% {
+                transform: translate3d(0, -1px, 0);
+            }
+        }
+
+        .bounce-in {
+            animation: bounce 1s ease-in-out;
+        }
+    </style>
+
+    <script>
+        // Add bounce animation on load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.mx-auto.h-24.w-24').classList.add('bounce-in');
+        });
+    </script>
 </body>
 </html>

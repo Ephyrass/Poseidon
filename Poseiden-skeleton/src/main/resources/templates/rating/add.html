@@ -8,7 +8,7 @@
 <body>
 <div class="container">
     <h1>Add Rating</h1>
-    <form th:action="@{/rating/add}" method="post">
+    <form th:action="@{/rating/validate}" method="post">
         <div class="form-group">
             <label for="moodysRating">Moody's Rating</label>
             <input type="text" id="moodysRating" name="moodysRating" class="form-control" required />
@@ -31,4 +31,3 @@
 </div>
 </body>
 </html>
-

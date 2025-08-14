@@ -1,30 +1,189 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>Add Bid - Poseidon</title>
     <meta charset="UTF-8">
-    <title>Add Bid</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-<div class="container">
-    <h1>Add Bid</h1>
-    <form th:action="@{/bidList/add}" method="post">
-        <div class="form-group">
-            <label for="account">Account</label>
-            <input type="text" id="account" name="account" class="form-control" required />
+<body class="bg-gray-50 min-h-screen">
+    <!-- Modern Navigation -->
+    <nav class="bg-white shadow-lg border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/home" class="flex-shrink-0 flex items-center">
+                        <div class="text-2xl font-bold text-primary-600">
+                            🔱 Poseidon
+                        </div>
+                    </a>
+                </div>
+                <!-- ...existing navigation code... -->
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="/bidList/list" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors duration-200">📊 Bid List</a>
+                    <a href="/curvePoint/list" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors duration-200">📈 Curve Points</a>
+                    <a href="/rating/list" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors duration-200">⭐ Ratings</a>
+                    <a href="/ruleName/list" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors duration-200">📋 Rules</a>
+                    <a href="/trade/list" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors duration-200">💰 Trades</a>
+                    <a href="/user/list" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors duration-200">👥 Users</a>
+                    <div class="ml-4 pl-4 border-l border-gray-300">
+                        <form th:action="@{/logout}" method="POST" class="inline">
+                            <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-md transition-colors duration-200">🚪 Logout</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="type">Type</label>
-            <input type="text" id="type" name="type" class="form-control" required />
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 flex items-center">
+                        <span class="text-4xl mr-3">📊</span>
+                        Add a new bid
+                    </h1>
+                    <p class="mt-2 text-gray-600">Create a new bid offer</p>
+                </div>
+                <a href="/bidList/list" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-all duration-200">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Back to bid list
+                </a>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="bidQuantity">Bid Quantity</label>
-            <input type="number" id="bidQuantity" name="bidQuantity" class="form-control" required />
+
+        <!-- Form Card -->
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
+                <!-- Form Header -->
+                <div class="bg-gradient-to-r from-blue-500 to-indigo-600 px-8 py-6">
+                    <h2 class="text-xl font-semibold text-white">Bid information</h2>
+                    <p class="text-blue-100 mt-1">Fill in all required fields</p>
+                </div>
+
+                <!-- Form Content -->
+                <div class="px-8 py-8">
+                    <form th:action="@{/bidList/validate}" method="post" class="space-y-6">
+                        <!-- Account Field -->
+                        <div>
+                            <label for="account" class="block text-sm font-medium text-gray-700 mb-2">
+                                <span class="flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                    </svg>
+                                    Account <span class="text-red-500">*</span>
+                                </span>
+                            </label>
+                            <input type="text" id="account" name="account" required
+                                   class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200"
+                                   placeholder="e.g. ACC001, TRADING_ACCOUNT" />
+                            <p class="mt-2 text-sm text-gray-500">Unique trading account identifier</p>
+                        </div>
+
+                        <!-- Type Field -->
+                        <div>
+                            <label for="type" class="block text-sm font-medium text-gray-700 mb-2">
+                                <span class="flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                                    </svg>
+                                    Type <span class="text-red-500">*</span>
+                                </span>
+                            </label>
+                            <input type="text" id="type" name="type" required
+                                   class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200"
+                                   placeholder="e.g. BUY, SELL, LIMIT, MARKET" />
+                            <p class="mt-2 text-sm text-gray-500">Order or transaction type</p>
+                        </div>
+
+                        <!-- Bid Quantity Field -->
+                        <div>
+                            <label for="bidQuantity" class="block text-sm font-medium text-gray-700 mb-2">
+                                <span class="flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                    </svg>
+                                    Bid quantity <span class="text-red-500">*</span>
+                                </span>
+                            </label>
+                            <input type="number" id="bidQuantity" name="bidQuantity" required step="0.01" min="0"
+                                   class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200"
+                                   placeholder="e.g. 100.00" />
+                            <p class="mt-2 text-sm text-gray-500">Bid amount or quantity (decimals accepted)</p>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                            <a href="/bidList/list" class="inline-flex items-center px-6 py-3 border border-gray-300 rounded-lg shadow-sm bg-white text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                                Cancel
+                            </a>
+
+                            <button type="submit" class="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                                Create bid
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Help Section -->
+            <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-blue-800">Bid creation help</h3>
+                        <div class="mt-2 text-sm text-blue-700">
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>Account:</strong> Use a unique identifier for the trading account</li>
+                                <li><strong>Type:</strong> Specify the order type (BUY, SELL, LIMIT, etc.)</li>
+                                <li><strong>Quantity:</strong> Enter the desired amount or quantity</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <a href="/bidList/list" class="btn btn-secondary">Cancel</a>
-    </form>
-</div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-16">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <div class="text-center text-gray-500 text-sm">
+                <p>© 2025 Poseidon. Modern financial management system.</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
-
