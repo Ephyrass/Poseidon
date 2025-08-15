@@ -25,21 +25,21 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank(message = "La notation Moody's est obligatoire")
-    @Size(max = 125, message = "La notation Moody's ne peut pas dépasser 125 caractères")
+    @NotBlank(message = "Moody's rating is required")
+    @Size(max = 125, message = "Moody's rating cannot exceed 125 characters")
     private String moodysRating;
 
-    @NotBlank(message = "La notation S&P est obligatoire")
-    @Size(max = 125, message = "La notation S&P ne peut pas dépasser 125 caractères")
+    @NotBlank(message = "S&P rating is required")
+    @Size(max = 125, message = "S&P rating cannot exceed 125 characters")
     private String sandPRating;
 
-    @NotBlank(message = "La notation Fitch est obligatoire")
-    @Size(max = 125, message = "La notation Fitch ne peut pas dépasser 125 caractères")
+    @NotBlank(message = "Fitch rating is required")
+    @Size(max = 125, message = "Fitch rating cannot exceed 125 characters")
     private String fitchRating;
 
     /**
-     * Numéro d'ordre (doit être un nombre positif).
+     * Order number (must be a positive number).
      */
-    @Positive(message = "Le numéro d'ordre doit être un nombre positif.")
+    @Positive(message = "Order number must be a positive number.")
     private Integer orderNumber;
 }

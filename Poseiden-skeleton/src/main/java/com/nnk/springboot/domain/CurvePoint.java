@@ -28,24 +28,24 @@ public class CurvePoint {
     private Integer id;
 
     /**
-     * Identifiant de la courbe (doit être un nombre positif).
+     * Curve identifier (must be a positive number).
      */
-    @NotNull(message = "L'identifiant de la courbe est obligatoire")
-    @Positive(message = "L'identifiant de la courbe doit être un nombre positif.")
+    @NotNull(message = "Curve identifier is required")
+    @Positive(message = "Curve identifier must be a positive number.")
     private Integer curveId;
 
     private Timestamp asOfDate;
 
     /**
-     * Terme de la courbe (doit être un nombre positif).
+     * Curve term (must be a positive number).
      */
-    @Positive(message = "Le terme de la courbe doit être un nombre positif.")
+    @Positive(message = "Curve term must be a positive number.")
     private Double term;
 
     /**
-     * Valeur de la courbe (doit être un nombre positif).
+     * Curve value (must be a positive number).
      */
-    @Positive(message = "La valeur de la courbe doit être un nombre positif.")
+    @Positive(message = "Curve value must be a positive number.")
     @Column(name = "`value`")
     private Double value;
 

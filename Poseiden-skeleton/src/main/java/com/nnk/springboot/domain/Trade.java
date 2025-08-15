@@ -29,74 +29,74 @@ public class Trade {
     @Column(name = "TradeId")
     private Integer tradeId;
 
-    @NotBlank(message = "Le compte est obligatoire")
-    @Size(max = 30, message = "Le compte ne peut pas dépasser 30 caractères")
+    @NotBlank(message = "Account is required")
+    @Size(max = 30, message = "Account cannot exceed 30 characters")
     private String account;
 
-    @NotBlank(message = "Le type est obligatoire")
-    @Size(max = 30, message = "Le type ne peut pas dépasser 30 caractères")
+    @NotBlank(message = "Type is required")
+    @Size(max = 30, message = "Type cannot exceed 30 characters")
     private String type;
 
     /**
-     * Quantité achetée (doit être un nombre positif).
+     * Buy quantity (must be a positive number).
      */
-    @Positive(message = "La quantité achetée doit être un nombre positif.")
+    @Positive(message = "Buy quantity must be a positive number.")
     private Double buyQuantity;
 
     /**
-     * Quantité vendue (doit être un nombre positif).
+     * Sell quantity (must be a positive number).
      */
-    @Positive(message = "La quantité vendue doit être un nombre positif.")
+    @Positive(message = "Sell quantity must be a positive number.")
     private Double sellQuantity;
 
     /**
-     * Prix d'achat (doit être un nombre positif).
+     * Buy price (must be a positive number).
      */
-    @Positive(message = "Le prix d'achat doit être un nombre positif.")
+    @Positive(message = "Buy price must be a positive number.")
     private Double buyPrice;
 
     /**
-     * Prix de vente (doit être un nombre positif).
+     * Sell price (must be a positive number).
      */
-    @Positive(message = "Le prix de vente doit être un nombre positif.")
+    @Positive(message = "Sell price must be a positive number.")
     private Double sellPrice;
 
-    @Size(max = 125, message = "Le benchmark ne peut pas dépasser 125 caractères")
+    @Size(max = 125, message = "Benchmark cannot exceed 125 characters")
     private String benchmark;
 
     private Timestamp tradeDate;
 
-    @Size(max = 125, message = "La sécurité ne peut pas dépasser 125 caractères")
+    @Size(max = 125, message = "Security cannot exceed 125 characters")
     private String security;
 
-    @Size(max = 10, message = "Le statut ne peut pas dépasser 10 caractères")
+    @Size(max = 10, message = "Status cannot exceed 10 characters")
     private String status;
 
-    @Size(max = 125, message = "Le trader ne peut pas dépasser 125 caractères")
+    @Size(max = 125, message = "Trader cannot exceed 125 characters")
     private String trader;
 
-    @Size(max = 125, message = "Le book ne peut pas dépasser 125 caractères")
+    @Size(max = 125, message = "Book cannot exceed 125 characters")
     private String book;
 
-    @Size(max = 125, message = "Le nom de création ne peut pas dépasser 125 caractères")
+    @Size(max = 125, message = "Creation name cannot exceed 125 characters")
     private String creationName;
 
     private Timestamp creationDate;
 
-    @Size(max = 125, message = "Le nom de révision ne peut pas dépasser 125 caractères")
+    @Size(max = 125, message = "Revision name cannot exceed 125 characters")
     private String revisionName;
 
     private Timestamp revisionDate;
 
-    @Size(max = 125, message = "Le nom de deal ne peut pas dépasser 125 caractères")
+    @Size(max = 125, message = "Deal name cannot exceed 125 characters")
     private String dealName;
 
-    @Size(max = 125, message = "Le type de deal ne peut pas dépasser 125 caractères")
+    @Size(max = 125, message = "Deal type cannot exceed 125 characters")
     private String dealType;
 
-    @Size(max = 125, message = "L'ID de liste source ne peut pas dépasser 125 caractères")
+    @Size(max = 125, message = "Source list ID cannot exceed 125 characters")
     private String sourceListId;
 
-    @Size(max = 125, message = "Le côté ne peut pas dépasser 125 caractères")
+    @Size(max = 125, message = "Side cannot exceed 125 characters")
     private String side;
 }
