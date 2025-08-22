@@ -58,7 +58,7 @@
                         💰 Trades
                     </a>
                     <a href="/user/list" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors duration-200"
-                       sec:authorize="hasAuthority('ADMIN')">
+                       sec:authorize="hasRole('ADMIN')">
                         👥 Users
                     </a>
                 </div>
@@ -100,7 +100,7 @@
                         💰 Trades
                     </a>
                     <a href="/user/list" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-md"
-                       sec:authorize="hasAuthority('ADMIN')">
+                       sec:authorize="hasRole('ADMIN')">
                         👥 Users
                     </a>
                     <div class="border-t border-gray-200 pt-2">

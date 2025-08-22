@@ -66,18 +66,13 @@ public class SecurityConfig {
                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                 // Specific public pages
                 .requestMatchers("/", "/login").permitAll()
-                // Public user registration
-                .requestMatchers("/user/add", "/user/validate").permitAll()
-                // H2 console restricted to ADMIN (only in dev)
-                .requestMatchers("/h2-console/**").hasRole("ADMIN")
+                // User management - ADMIN only
+                .requestMatchers("/user/**").hasRole("ADMIN")
                 // All other requests require authentication
                 .anyRequest().authenticated()
             )
-            .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/h2-console/**") // Disable CSRF for H2 console only
-            )
+            .csrf(csrf -> csrf.disable()) // Disable CSRF for API endpoints if needed
             .headers(headers -> headers
-                .frameOptions(frameOptions -> frameOptions.sameOrigin()) // Allow same-origin frames for H2
                 .httpStrictTransportSecurity(hstsConfig -> hstsConfig
                     .maxAgeInSeconds(31536000)
                     .includeSubDomains(true)

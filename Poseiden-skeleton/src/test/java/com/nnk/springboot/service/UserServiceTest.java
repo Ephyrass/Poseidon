@@ -327,4 +327,125 @@ class UserServiceTest {
         assertFalse(result);
         verify(userRepository).findByUsername(username);
     }
+
+    @Test
+    @DisplayName("Should save user with password encoding")
+    void testSaveWithPasswordEncoding() {
+        // Given
+        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
+        when(userRepository.save(any(User.class))).thenReturn(testUser);
+
+        // When
+        User savedUser = userService.saveWithPasswordEncoding(testUser);
+
+        // Then
+        assertNotNull(savedUser);
+        verify(passwordEncoder).encode("Password123!");
+        verify(userRepository).save(testUser);
+    }
+
+    @Test
+    @DisplayName("Should update user with new password")
+    void testUpdateUserWithNewPassword() {
+        // Given
+        when(passwordEncoder.encode(anyString())).thenReturn("newEncodedPassword");
+        when(userRepository.save(any(User.class))).thenReturn(testUser);
+
+        // When
+        userService.updateUserWithNewPassword(testUser, "NewPassword123!");
+
+        // Then
+        verify(passwordEncoder).encode("NewPassword123!");
+        verify(userRepository).save(testUser);
+    }
+
+    @Test
+    @DisplayName("Should find user by username")
+    void testFindByUsername() {
+        // Given
+        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(testUser));
+
+        // When
+        Optional<User> foundUser = userService.findByUsername("testuser");
+
+        // Then
+        assertTrue(foundUser.isPresent());
+        assertEquals("testuser", foundUser.get().getUsername());
+        verify(userRepository).findByUsername("testuser");
+    }
+
+    @Test
+    @DisplayName("Should check if user exists by username")
+    void testExistsByUsername() {
+        // Given
+        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(testUser));
+
+        // When
+        boolean exists = userService.existsByUsername("testuser");
+
+        // Then
+        assertTrue(exists);
+        verify(userRepository).findByUsername("testuser");
+    }
+
+    @Test
+    @DisplayName("Should find all users")
+    void testFindAll() {
+        // Given
+        User anotherUser = User.builder()
+                .id(2)
+                .username("anotheruser")
+                .password("encoded")
+                .fullname("Another User")
+                .role("ADMIN")
+                .build();
+        when(userRepository.findAll()).thenReturn(Arrays.asList(testUser, anotherUser));
+
+        // When
+        Iterable<User> users = userService.findAll();
+
+        // Then
+        assertNotNull(users);
+        assertTrue(users.iterator().hasNext());
+        verify(userRepository).findAll();
+    }
+
+    @Test
+    @DisplayName("Should find user by ID")
+    void testFindById() {
+        // Given
+        when(userRepository.findById(1)).thenReturn(Optional.of(testUser));
+
+        // When
+        Optional<User> foundUser = userService.findById(1);
+
+        // Then
+        assertTrue(foundUser.isPresent());
+        assertEquals(1, foundUser.get().getId());
+        verify(userRepository).findById(1);
+    }
+
+    @Test
+    @DisplayName("Should check if user exists by ID")
+    void testExistsById() {
+        // Given
+        when(userRepository.existsById(1)).thenReturn(true);
+
+        // When
+        boolean exists = userService.existsById(1);
+
+        // Then
+        assertTrue(exists);
+        verify(userRepository).existsById(1);
+    }
+
+    @Test
+    @DisplayName("Should delete user by ID")
+    void testDeleteById() {
+        // When
+        userService.deleteById(1);
+
+        // Then
+        verify(userRepository).deleteById(1);
+    }
 }
