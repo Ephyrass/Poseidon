@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 /**
- * Service personnalisé pour la gestion des détails d'authentification des utilisateurs.
- * Implémente UserDetailsService de Spring Security pour l'authentification session-based.
+ * Custom service for managing user authentication details.
+ * Implements Spring Security's UserDetailsService for session-based authentication.
  *
  * @author Poseidon Team
  * @version 1.0
@@ -24,18 +24,23 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    /**
+     * Constructor for CustomUserDetailsService.
+     *
+     * @param userRepository the repository to access user data
+     */
     public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     /**
-     * Charge les détails d'un utilisateur par son nom d'utilisateur pour l'authentification.
-     * Cette méthode est utilisée par Spring Security lors du processus d'authentification
-     * pour récupérer les informations de l'utilisateur et ses autorisations.
+     * Loads user details by username for authentication.
+     * This method is used by Spring Security during the authentication process
+     * to retrieve user information and authorities.
      *
-     * @param username le nom d'utilisateur unique de l'utilisateur à authentifier
-     * @return UserDetails contenant les informations d'authentification de l'utilisateur
-     * @throws UsernameNotFoundException si aucun utilisateur n'est trouvé avec ce nom d'utilisateur
+     * @param username the unique username of the user to authenticate
+     * @return UserDetails containing the user's authentication information
+     * @throws UsernameNotFoundException if no user is found with the given username
      *
      * @see UserDetailsService#loadUserByUsername(String)
      * @see UserDetails
@@ -43,7 +48,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
         GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole());
 

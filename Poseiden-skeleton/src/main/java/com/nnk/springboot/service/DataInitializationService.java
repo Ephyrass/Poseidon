@@ -2,6 +2,7 @@ package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.User;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,9 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
  * User data initialization service with BCrypt passwords.
  *
  * This service runs at application startup to create default users
- * with properly encoded passwords.
+ * with properly encoded passwords in development mode only.
  */
 @Service
+@Profile("dev")
 public class DataInitializationService implements CommandLineRunner {
 
     private final UserService userService;

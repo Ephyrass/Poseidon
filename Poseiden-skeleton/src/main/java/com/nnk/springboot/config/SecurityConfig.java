@@ -9,19 +9,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 
 /**
- * Configuration de sécurité pour l'application Poseidon.
- * Configure l'authentification session-based, les autorisations d'accès,
- * la gestion des sessions et les pages personnalisées.
+ * Security configuration for the Poseidon application.
+ * Configures session-based authentication, access permissions,
+ * session management, and custom pages.
  *
- * <p>Cette configuration implémente les bonnes pratiques de sécurité incluant :
+ * <p>This configuration implements security best practices including:
  * <ul>
- *   <li>Authentification basée sur les sessions</li>
- *   <li>Gestion des sessions avec limitation à une session par utilisateur</li>
- *   <li>Protection CSRF (désactivée pour H2 console)</li>
- *   <li>Encodage des mots de passe avec BCrypt</li>
- *   <li>Pages d'erreur personnalisées</li>
+ *   <li>Session-based authentication</li>
+ *   <li>Session management with limitation to one session per user</li>
+ *   <li>CSRF protection (disabled for H2 console)</li>
+ *   <li>Password encoding with BCrypt</li>
+ *   <li>Custom error pages</li>
  * </ul>
  *
  * @author Poseidon Team
@@ -32,26 +34,26 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 public class SecurityConfig {
 
     /**
-     * Configure la chaîne de filtres de sécurité pour gérer les autorisations HTTP,
-     * l'authentification par formulaire, la gestion des sessions et les pages d'erreur.
+     * Configures the security filter chain to handle HTTP permissions,
+     * form-based authentication, session management, and error pages.
      *
-     * <p>Configuration des accès :
+     * <p>Access configuration:
      * <ul>
-     *   <li>Ressources publiques : /, /login, /css/**, /js/**, /images/**, /user/add, /user/validate</li>
-     *   <li>Console H2 : accès restreint au rôle ADMIN uniquement</li>
-     *   <li>Toutes les autres ressources : authentification requise</li>
+     *   <li>Public static resources: /, /login, /css/**, /js/**, /images/**, /user/add, /user/validate</li>
+     *   <li>Restricted H2 console access to ADMIN role only</li>
+     *   <li>All other resources require authentication</li>
      * </ul>
      *
-     * <p>Gestion des sessions :
+     * <p>Session management:
      * <ul>
-     *   <li>Maximum d'une session active par utilisateur</li>
-     *   <li>Redirection vers /login?expired si la session expire</li>
-     *   <li>Invalidation automatique des sessions précédentes</li>
+     *   <li>Maximum of one active session per user</li>
+     *   <li>Redirect to /login?expired if the session expires</li>
+     *   <li>Automatic invalidation of previous sessions</li>
      * </ul>
      *
-     * @param http l'objet HttpSecurity pour configurer la sécurité web
-     * @return le filtre de sécurité configuré
-     * @throws Exception en cas d'erreur de configuration
+     * @param http the HttpSecurity object to configure web security
+     * @return the configured security filter
+     * @throws Exception in case of configuration error
      *
      * @see HttpSecurity
      * @see SecurityFilterChain
@@ -60,54 +62,66 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/", "/login", "/css/**", "/js/**", "/images/**", "/user/add", "/user/validate").permitAll() // Ressources publiques
-                .requestMatchers("/h2-console/**").hasRole("ADMIN") // Console H2 restreinte aux ADMIN
-                .anyRequest().authenticated() // Toutes les autres requêtes nécessitent une authentification
+                // Public static resources
+                .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                // Specific public pages
+                .requestMatchers("/", "/login").permitAll()
+                // Public user registration
+                .requestMatchers("/user/add", "/user/validate").permitAll()
+                // H2 console restricted to ADMIN (only in dev)
+                .requestMatchers("/h2-console/**").hasRole("ADMIN")
+                // All other requests require authentication
+                .anyRequest().authenticated()
             )
             .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/h2-console/**") // Désactiver CSRF pour H2 console uniquement
+                .ignoringRequestMatchers("/h2-console/**") // Disable CSRF for H2 console only
             )
             .headers(headers -> headers
-                .frameOptions(frameOptions -> frameOptions.sameOrigin()) // Autoriser les frames du même origine
+                .frameOptions(frameOptions -> frameOptions.sameOrigin()) // Allow same-origin frames for H2
+                .httpStrictTransportSecurity(hstsConfig -> hstsConfig
+                    .maxAgeInSeconds(31536000)
+                    .includeSubDomains(true)
+                ) // HSTS to enforce HTTPS in production
             )
             .formLogin(form -> form
-                .loginPage("/login") // Page de connexion personnalisée
-                .defaultSuccessUrl("/home", true) // Redirection après connexion réussie vers la page d'accueil
-                .failureUrl("/login?error") // Redirection en cas d'échec de connexion
-                .permitAll() // Accès libre à la page de connexion
+                .loginPage("/login") // Custom login page
+                .defaultSuccessUrl("/home", true) // Redirect after successful login to home page
+                .failureUrl("/login?error") // Redirect on login failure
+                .permitAll() // Free access to login page
             )
             .logout(logout -> logout
-                .logoutUrl("/logout") // URL explicite pour le logout
-                .logoutSuccessUrl("/login?logout") // Redirection après déconnexion
-                .invalidateHttpSession(true) // Invalider la session HTTP
-                .deleteCookies("JSESSIONID") // Supprimer le cookie de session
-                .permitAll() // Accès libre à la déconnexion
+                .logoutUrl("/logout") // Explicit URL for logout
+                .logoutSuccessUrl("/login?logout") // Redirect after logout
+                .invalidateHttpSession(true) // Invalidate HTTP session
+                .deleteCookies("JSESSIONID") // Remove session cookie
+                .permitAll() // Free access to logout
             )
             .exceptionHandling(exception -> exception
-                .accessDeniedPage("/403") // Page d'erreur d'accès refusé
+                .accessDeniedPage("/403") // Access denied error page
             )
             .sessionManagement(session -> session
-                .maximumSessions(1) // Limite à une session par utilisateur
-                .maxSessionsPreventsLogin(false) // Permettre la nouvelle connexion en invalidant l'ancienne session
-                .expiredUrl("/login?expired") // Redirection si la session expire
+                .maximumSessions(1) // Limit to one session per user
+                .maxSessionsPreventsLogin(false) // Allow new login by invalidating old session
+                .expiredUrl("/login?expired") // Redirect if session expires
+                .sessionRegistry(sessionRegistry()) // Add session registry
             );
         return http.build();
     }
 
     /**
-     * Fournit un encodeur de mot de passe basé sur l'algorithme BCrypt.
-     * BCrypt est un algorithme de hachage adaptatif basé sur Blowfish,
-     * conçu spécifiquement pour le hachage sécurisé des mots de passe.
+     * Provides a password encoder based on the BCrypt algorithm.
+     * BCrypt is an adaptive hashing algorithm based on Blowfish,
+     * specifically designed for secure password hashing.
      *
-     * <p>Avantages de BCrypt :
+     * <p>Advantages of BCrypt:
      * <ul>
-     *   <li>Résistant aux attaques par force brute</li>
-     *   <li>Coût adaptatif configurable</li>
-     *   <li>Génération automatique de sel (salt)</li>
-     *   <li>Standard de l'industrie pour le hachage des mots de passe</li>
+     *   <li>Resistant to brute-force attacks</li>
+     *   <li>Configurable adaptive cost</li>
+     *   <li>Automatic salt generation</li>
+     *   <li>Industry standard for password hashing</li>
      * </ul>
      *
-     * @return une instance de BCryptPasswordEncoder avec la force par défaut (10)
+     * @return an instance of BCryptPasswordEncoder with default strength (10)
      *
      * @see BCryptPasswordEncoder
      * @see PasswordEncoder
@@ -118,13 +132,13 @@ public class SecurityConfig {
     }
 
     /**
-     * Fournit le gestionnaire d'authentification pour l'application.
-     * Le gestionnaire d'authentification est responsable de la validation
-     * des informations d'identification des utilisateurs.
+     * Provides the authentication manager for the application.
+     * The authentication manager is responsible for validating
+     * user credentials.
      *
-     * @param authenticationConfiguration la configuration d'authentification Spring
-     * @return le gestionnaire d'authentification configuré
-     * @throws Exception en cas d'erreur de configuration
+     * @param authenticationConfiguration Spring authentication configuration
+     * @return the configured authentication manager
+     * @throws Exception in case of configuration error
      *
      * @see AuthenticationManager
      * @see AuthenticationConfiguration
@@ -135,16 +149,31 @@ public class SecurityConfig {
     }
 
     /**
-     * Bean pour publier les événements de session HTTP.
-     * Nécessaire pour le bon fonctionnement de la gestion des sessions concurrentes.
-     * Permet à Spring Security de détecter les créations et destructions de sessions.
+     * Bean for publishing HTTP session events.
+     * Necessary for the proper functioning of concurrent session management.
+     * Allows Spring Security to detect session creation and destruction.
      *
-     * @return l'éditeur d'événements de session HTTP
+     * @return the HTTP session event publisher
      *
      * @see HttpSessionEventPublisher
      */
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
+    }
+
+    /**
+     * Provides the registry of sessions for managing active sessions.
+     * The session registry keeps track of active sessions and
+     * manages restrictions such as the maximum number of sessions per user.
+     *
+     * @return an instance of SessionRegistryImpl for session tracking
+     *
+     * @see SessionRegistry
+     * @see SessionRegistryImpl
+     */
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 }
