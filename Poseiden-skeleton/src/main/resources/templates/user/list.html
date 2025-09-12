@@ -65,9 +65,12 @@
                 <!-- User Menu -->
                 <div class="flex items-center space-x-4">
                     <span class="text-sm text-gray-700" sec:authentication="name">User</span>
-                    <a href="/app/logout" class="inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-colors duration-200">
-                        🚪 Logout
-                    </a>
+                    <form th:action="@{/logout}" method="post" class="inline">
+                        <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+                            🚪 Logout
+                        </button>
+                    </form>
                 </div>
 
                 <!-- Mobile menu button -->
@@ -98,14 +101,17 @@
                     <a href="/trade/list" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-md">
                         💰 Trades
                     </a>
-                    <a href="/user/list" class="block px-3 py-2 text-base font-medium bg-primary-100 text-primary-700 rounded-md">
+                    <a href="/user/list" class="block px-3 py-2 text-base font-medium bg-primary-100 text-primary-700 border border-primary-200">
                         👥 Users
                     </a>
                     <div class="border-t border-gray-200 pt-2">
                         <span class="block px-3 py-2 text-sm text-gray-500" sec:authentication="name">User</span>
-                        <a href="/app/logout" class="block px-3 py-2 text-base font-medium text-red-600 hover:bg-red-50 rounded-md">
-                            🚪 Logout
-                        </a>
+                        <form th:action="@{/logout}" method="post" class="w-full">
+                            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <button type="submit" class="w-full text-left px-3 py-2 text-base font-medium text-red-600 hover:bg-red-50 rounded-md">
+                                🚪 Logout
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>

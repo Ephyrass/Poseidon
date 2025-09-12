@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, content)">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:fragment="layout(title, content)" lang="fr">
 <head>
     <title th:text="${title} ?: 'Poseidon'">Poseidon</title>
     <meta charset="UTF-8">
@@ -66,9 +66,12 @@
                 <!-- User Menu -->
                 <div class="flex items-center space-x-4">
                     <span class="text-sm text-gray-700" sec:authentication="name">User</span>
-                    <a href="/app/logout" class="inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-colors duration-200">
-                        🚪 Logout
-                    </a>
+                    <form th:action="@{/logout}" method="post" class="inline">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+                            🚪 Logout
+                        </button>
+                    </form>
                 </div>
 
                 <!-- Mobile menu button -->
@@ -105,9 +108,12 @@
                     </a>
                     <div class="border-t border-gray-200 pt-2">
                         <span class="block px-3 py-2 text-sm text-gray-500" sec:authentication="name">User</span>
-                        <a href="/app/logout" class="block px-3 py-2 text-base font-medium text-red-600 hover:bg-red-50 rounded-md">
-                            🚪 Logout
-                        </a>
+                        <form th:action="@{/logout}" method="post" class="w-full">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <button type="submit" class="w-full text-left px-3 py-2 text-base font-medium text-red-600 hover:bg-red-50 rounded-md">
+                                🚪 Logout
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
