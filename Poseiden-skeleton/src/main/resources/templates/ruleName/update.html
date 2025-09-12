@@ -1,42 +1,107 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
+    <title>Update Rule Name - Poseidon</title>
     <meta charset="UTF-8">
-    <title>Update Rule Name</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<div class="container">
-    <h1>Update Rule Name</h1>
-    <form th:action="@{'/ruleName/update/' + ${ruleName.id}}" method="post">
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" class="form-control" th:value="${ruleName.name}" required />
+<body class="bg-gray-50 min-h-screen">
+<nav class="bg-white shadow-lg border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex items-center">
+                <a href="/home" class="flex-shrink-0 flex items-center">
+                    <div class="text-2xl font-bold text-primary-600">🔱 Poseidon</div>
+                </a>
+            </div>
+            <div class="hidden md:flex items-center space-x-1">
+                <a href="/ruleName/list" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">📋 Rules</a>
+                <div class="ml-4 pl-4 border-l border-gray-300">
+                    <form th:action="@{/logout}" method="post" class="inline">
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-md">🚪 Logout</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="description">Description</label>
-            <input type="text" id="description" name="description" class="form-control" th:value="${ruleName.description}" required />
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 flex items-center"><span class="text-4xl mr-3">📋</span>Update rule</h1>
+                <p class="mt-2 text-gray-600">Edit rule details</p>
+            </div>
+            <a href="/ruleName/list" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all duration-200">Back to list</a>
         </div>
-        <div class="form-group">
-            <label for="json">JSON</label>
-            <input type="text" id="json" name="json" class="form-control" th:value="${ruleName.json}" required />
+    </div>
+
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 px-8 py-6">
+                <h2 class="text-xl font-semibold text-white">Rule information</h2>
+                <p class="text-blue-100 mt-1">Update required fields</p>
+            </div>
+
+            <div class="px-8 py-8">
+                <form th:action="@{/ruleName/update/{id}(id=${ruleName.id})}" th:object="${ruleName}" method="post" class="space-y-6">
+
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Name <span class="text-red-500">*</span></label>
+                        <input type="text" id="name" th:field="*{name}" required
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" placeholder="Rule name" />
+                        <p class="mt-1 text-sm text-red-600" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                    </div>
+
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description <span class="text-red-500">*</span></label>
+                        <input type="text" id="description" th:field="*{description}" required
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" placeholder="Short description" />
+                        <p class="mt-1 text-sm text-red-600" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+                    </div>
+
+                    <div>
+                        <label for="json" class="block text-sm font-medium text-gray-700 mb-2">JSON <span class="text-red-500">*</span></label>
+                        <input type="text" id="json" th:field="*{json}" required
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" placeholder='{"key":"value"}' />
+                        <p class="mt-1 text-sm text-red-600" th:if="${#fields.hasErrors('json')}" th:errors="*{json}"></p>
+                    </div>
+
+                    <div>
+                        <label for="template" class="block text-sm font-medium text-gray-700 mb-2">Template <span class="text-red-500">*</span></label>
+                        <input type="text" id="template" th:field="*{template}" required
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" placeholder="Template content" />
+                        <p class="mt-1 text-sm text-red-600" th:if="${#fields.hasErrors('template')}" th:errors="*{template}"></p>
+                    </div>
+
+                    <div>
+                        <label for="sqlStr" class="block text-sm font-medium text-gray-700 mb-2">SQL String <span class="text-red-500">*</span></label>
+                        <input type="text" id="sqlStr" th:field="*{sqlStr}" required
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" placeholder="SQL expression" />
+                        <p class="mt-1 text-sm text-red-600" th:if="${#fields.hasErrors('sqlStr')}" th:errors="*{sqlStr}"></p>
+                    </div>
+
+                    <div>
+                        <label for="sqlPart" class="block text-sm font-medium text-gray-700 mb-2">SQL Part <span class="text-red-500">*</span></label>
+                        <input type="text" id="sqlPart" th:field="*{sqlPart}" required
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" placeholder="SQL part" />
+                        <p class="mt-1 text-sm text-red-600" th:if="${#fields.hasErrors('sqlPart')}" th:errors="*{sqlPart}"></p>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                        <a href="/ruleName/list" class="inline-flex items-center px-6 py-3 border border-gray-300 rounded-lg bg-white text-base font-medium text-gray-700 hover:bg-gray-50">Cancel</a>
+                        <button type="submit" class="inline-flex items-center px-8 py-3 text-base font-medium rounded-lg text-white bg-gradient-to-r from-indigo-600 to-indigo-600 hover:from-indigo-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="template">Template</label>
-            <input type="text" id="template" name="template" class="form-control" th:value="${ruleName.template}" required />
-        </div>
-        <div class="form-group">
-            <label for="sqlStr">SQL String</label>
-            <input type="text" id="sqlStr" name="sqlStr" class="form-control" th:value="${ruleName.sqlStr}" required />
-        </div>
-        <div class="form-group">
-            <label for="sqlPart">SQL Part</label>
-            <input type="text" id="sqlPart" name="sqlPart" class="form-control" th:value="${ruleName.sqlPart}" required />
-        </div>
-        <button type="submit" class="btn btn-primary">Update</button>
-        <a href="/ruleName/list" class="btn btn-secondary">Cancel</a>
-    </form>
-</div>
+    </div>
+</main>
+
+<footer class="bg-white border-t border-gray-200 mt-16">
+    <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">© 2025 Poseidon.</div>
+</footer>
 </body>
 </html>
-

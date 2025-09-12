@@ -1,29 +1,92 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
+    <title>Update Trade - Poseidon</title>
     <meta charset="UTF-8">
-    <title>Update Trade</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<div class="container">
-    <h1>Update Trade</h1>
-    <form th:action="@{'/trade/update/' + ${trade.tradeId}}" method="post">
-        <div class="form-group">
-            <label for="account">Account</label>
-            <input type="text" id="account" name="account" class="form-control" th:value="${trade.account}" required />
+<body class="bg-gray-50 min-h-screen">
+<nav class="bg-white shadow-lg border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex items-center">
+                <a href="/home" class="flex-shrink-0 flex items-center">
+                    <div class="text-2xl font-bold text-primary-600">🔱 Poseidon</div>
+                </a>
+            </div>
+            <div class="hidden md:flex items-center space-x-1">
+                <a href="/trade/list" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors duration-200">💰 Trades</a>
+                <div class="ml-4 pl-4 border-l border-gray-300">
+                    <form th:action="@{/logout}" method="post" class="inline">
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-md">🚪 Logout</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="type">Type</label>
-            <input type="text" id="type" name="type" class="form-control" th:value="${trade.type}" required />
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 flex items-center"><span class="text-4xl mr-3">💰</span>Update trade</h1>
+                <p class="mt-2 text-gray-600">Edit trade information</p>
+            </div>
+            <a href="/trade/list" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all duration-200">Back to list</a>
         </div>
-        <div class="form-group">
-            <label for="buyQuantity">Buy Quantity</label>
-            <input type="number" id="buyQuantity" name="buyQuantity" class="form-control" th:value="${trade.buyQuantity}" required />
+    </div>
+
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
+            <div class="bg-gradient-to-r from-emerald-500 to-green-600 px-8 py-6">
+                <h2 class="text-xl font-semibold text-white">Transaction Details</h2>
+                <p class="text-emerald-100 mt-1">Update trade information</p>
+            </div>
+
+            <div class="px-8 py-8">
+                <form th:action="@{/trade/update/{id}(id=${trade.tradeId})}" th:object="${trade}" method="post" class="space-y-6">
+
+                    <div>
+                        <label for="account" class="block text-sm font-medium text-gray-700 mb-2">Trading Account <span class="text-red-500">*</span></label>
+                        <input type="text" id="account" th:field="*{account}" required
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                               placeholder="Ex: TRADE001" />
+                    </div>
+
+                    <div>
+                        <label for="type" class="block text-sm font-medium text-gray-700 mb-2">Transaction Type <span class="text-red-500">*</span></label>
+                        <select id="type" th:field="*{type}" required
+                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <option value="">Select a type</option>
+                            <option value="BUY">BUY</option>
+                            <option value="SELL">SELL</option>
+                            <option value="SWAP">SWAP</option>
+                            <option value="OPTION">OPTION</option>
+                            <option value="FUTURE">FUTURE</option>
+                            <option value="BOND">BOND</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="buyQuantity" class="block text-sm font-medium text-gray-700 mb-2">Buy Quantity <span class="text-red-500">*</span></label>
+                        <input type="number" id="buyQuantity" th:field="*{buyQuantity}" required step="0.01" min="0"
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" placeholder="Ex: 1000.00" />
+                    </div>
+
+                    <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                        <a href="/trade/list" class="inline-flex items-center px-6 py-3 border border-gray-300 rounded-lg bg-white text-base font-medium text-gray-700 hover:bg-gray-50">Cancel</a>
+                        <button type="submit" class="inline-flex items-center px-8 py-3 text-base font-medium rounded-lg text-white bg-gradient-to-r from-emerald-600 to-green-600">Save trade</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Update</button>
-        <a href="/trade/list" class="btn btn-secondary">Cancel</a>
-    </form>
-</div>
+    </div>
+</main>
+
+<footer class="bg-white border-t border-gray-200 mt-16">
+    <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">© 2025 Poseidon.</div>
+</footer>
 </body>
 </html>

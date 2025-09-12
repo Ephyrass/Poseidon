@@ -1,61 +1,116 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	  xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
-	<meta charset="utf-8"/>
-	<title>Home</title>
-	<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+    <title>Update User - Poseidon</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<div class="container">
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation (simplified, same as add) -->
+    <nav class="bg-white shadow-lg border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/home" class="flex-shrink-0 flex items-center">
+                        <div class="text-2xl font-bold text-primary-600">🔱 Poseidon</div>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="/user/list" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors duration-200">👥 Users</a>
+                    <div class="ml-4 pl-4 border-l border-gray-300">
+                        <form th:action="@{/logout}" method="post" class="inline">
+                            <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-md transition-colors duration-200">🚪 Logout</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-	<div class="row">
-		<h2>Update User</h2>
-	</div>
+    <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 flex items-center">
+                        <span class="text-4xl mr-3">👤</span>
+                        Update user
+                    </h1>
+                    <p class="mt-2 text-gray-600">Edit user account information</p>
+                </div>
+                <a href="/user/list" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-all duration-200">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Retour à la liste
+                </a>
+            </div>
+        </div>
 
-	<div class="row">
-		<form action="#" th:action="@{/user/update/{id}(id=${user.id})}" th:object="${user}" method="post" class="form-horizontal" style="width: 100%">
-			<div class="form-group">
-				<label for="fullname" class="col-sm-2 control-label">Full Name</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{fullname}" id="fullname" placeholder="Full Name" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="username" class="col-sm-2 control-label">User Name</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{username}" id="username" placeholder="User Name" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="password" class="col-sm-2 control-label">Password</label>
-				<div class="col-sm-10">
-					<input type="password" th:field="*{password}" id="password" placeholder="Password" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="password" class="col-sm-2 control-label">Role</label>
-				<div class="col-sm-10">
-					<label class="checkbox-inline"><input type="radio" th:field="*{role}" th:value="ADMIN">Admin</label>
-					<label class="checkbox-inline"><input type="radio" th:field="*{role}" th:value="USER">User</label>
-				</div>
-			</div>
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
+                <div class="bg-gradient-to-r from-purple-500 to-indigo-600 px-8 py-6">
+                    <h2 class="text-xl font-semibold text-white">User information</h2>
+                    <p class="text-purple-100 mt-1">Update required fields</p>
+                </div>
 
+                <div class="px-8 py-8">
+                    <form th:action="@{/user/update/{id}(id=${user.id})}" th:object="${user}" method="post" class="space-y-6">
 
-			<div class="form-group">
-				<div class="col-sm-12">
-					<input type="hidden" th:field="*{id}">
-					<a class="btn btn-danger btn-sm" href="/user/list">Cancel</a>
-					<input class="btn btn-primary btn-sm" type="submit" value="Update User">
-				</div>
-			</div>
+                        <div>
+                            <label for="fullname" class="block text-sm font-medium text-gray-700 mb-2">Full name <span class="text-red-500">*</span></label>
+                            <input type="text" th:field="*{fullname}" id="fullname" required
+                                   class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200"
+                                   placeholder="e.g. John Doe" />
+                            <p class="mt-2 text-sm text-red-600" th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}"></p>
+                        </div>
 
-		</form>
-	</div>
+                        <div>
+                            <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Username <span class="text-red-500">*</span></label>
+                            <input type="text" th:field="*{username}" id="username" required
+                                   class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200"
+                                   placeholder="e.g. john.doe" />
+                            <p class="mt-1 text-sm text-red-600" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
+                        </div>
 
-</div>
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password <span class="text-red-500">*</span></label>
+                            <input type="password" th:field="*{password}" id="password" required
+                                   class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200"
+                                   placeholder="Secure password" />
+                            <p class="mt-1 text-sm text-red-600" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                        </div>
+
+                        <div>
+                            <label for="role" class="block text-sm font-medium text-gray-700 mb-2">Role <span class="text-red-500">*</span></label>
+                            <select th:field="*{role}" id="role" required
+                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200">
+                                <option value="">Select a role</option>
+                                <option value="USER" th:selected="${user.role == 'USER'}">User</option>
+                                <option value="ADMIN" th:selected="${user.role == 'ADMIN'}">Admin</option>
+                            </select>
+                            <p class="mt-2 text-sm text-red-600" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></p>
+                        </div>
+
+                        <div>
+                            <button type="submit" class="w-full px-4 py-3 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md transition-all duration-200 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                                Update User
+                            </button>
+                        </div>
+
+                     </form>
+                 </div>
+             </div>
+         </div>
+     </main>
+
+    <footer class="bg-white shadow-inner mt-12">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+            <p class="text-sm text-gray-500">&copy; 2025 Poseidon.</p>
+        </div>
+    </footer>
 </body>
 </html>

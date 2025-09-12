@@ -1,33 +1,114 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
+    <title>Add Rating - Poseidon</title>
     <meta charset="UTF-8">
-    <title>Add Rating</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<div class="container">
-    <h1>Add Rating</h1>
-    <form th:action="@{/rating/validate}" method="post">
-        <div class="form-group">
-            <label for="moodysRating">Moody's Rating</label>
-            <input type="text" id="moodysRating" name="moodysRating" class="form-control" required />
+<body class="bg-gray-50 min-h-screen">
+<nav class="bg-white shadow-lg border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex items-center">
+                <a href="/home" class="flex-shrink-0 flex items-center">
+                    <div class="text-2xl font-bold text-primary-600">🔱 Poseidon</div>
+                </a>
+            </div>
+            <div class="hidden md:flex items-center space-x-1">
+                <a href="/rating/list" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">⭐ Ratings</a>
+                <a href="/user/list" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">👥 Users</a>
+                <div class="ml-4 pl-4 border-l border-gray-300">
+                    <form th:action="@{/logout}" method="post" class="inline">
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-md">🚪 Logout</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="sandPRating">SandP Rating</label>
-            <input type="text" id="sandPRating" name="sandPRating" class="form-control" required />
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 flex items-center"><span class="text-4xl mr-3">⭐</span>Add rating</h1>
+                <p class="mt-2 text-gray-600">Create a new rating</p>
+            </div>
+            <a href="/rating/list" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">Back to list</a>
         </div>
-        <div class="form-group">
-            <label for="fitchRating">Fitch Rating</label>
-            <input type="text" id="fitchRating" name="fitchRating" class="form-control" required />
+    </div>
+
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 px-8 py-6">
+                <h2 class="text-xl font-semibold text-white">Rating information</h2>
+                <p class="text-blue-100 mt-1">Fill in all required fields</p>
+            </div>
+
+            <div class="px-8 py-8">
+                <form th:action="@{/rating/validate}" method="post" class="space-y-6">
+
+                    <div>
+                        <label for="moodysRating" class="block text-sm font-medium text-gray-700 mb-2">Moody's Rating <span class="text-red-500">*</span></label>
+                        <input type="text" id="moodysRating" name="moodysRating" required
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" placeholder="e.g. A1" />
+                    </div>
+
+                    <div>
+                        <label for="sandPRating" class="block text-sm font-medium text-gray-700 mb-2">SandP Rating <span class="text-red-500">*</span></label>
+                        <input type="text" id="sandPRating" name="sandPRating" required
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" placeholder="e.g. AA" />
+                    </div>
+
+                    <div>
+                        <label for="fitchRating" class="block text-sm font-medium text-gray-700 mb-2">Fitch Rating <span class="text-red-500">*</span></label>
+                        <input type="text" id="fitchRating" name="fitchRating" required
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" placeholder="e.g. A+" />
+                    </div>
+
+                    <div>
+                        <label for="orderNumber" class="block text-sm font-medium text-gray-700 mb-2">Order Number <span class="text-red-500">*</span></label>
+                        <input type="number" id="orderNumber" name="orderNumber" required min="0"
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" placeholder="e.g. 1" />
+                    </div>
+
+                    <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                        <a href="/rating/list" class="inline-flex items-center px-6 py-3 border border-gray-300 rounded-lg bg-white text-base font-medium text-gray-700 hover:bg-gray-50">Cancel</a>
+                        <button type="submit" class="inline-flex items-center px-8 py-3 text-base font-medium rounded-lg text-white bg-gradient-to-r from-indigo-600 to-indigo-600 hover:from-indigo-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Create Rating</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="orderNumber">Order Number</label>
-            <input type="number" id="orderNumber" name="orderNumber" class="form-control" required />
+
+        <!-- Rating Guide -->
+        <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-blue-800">Rating Guide</h3>
+                    <div class="mt-2 text-sm text-blue-700">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li><strong>Moody's Rating:</strong> Standard credit rating from Moody's. Use the official notation (e.g. A1, Baa2).</li>
+                            <li><strong>S&P Rating:</strong> Standard rating from Standard & Poor's (e.g. AA, BBB).</li>
+                            <li><strong>Fitch Rating:</strong> Rating from Fitch (e.g. A+, BBB-).</li>
+                            <li><strong>Order Number:</strong> Integer used to sort or prioritize ratings in lists.</li>
+                            <li><strong>Usage:</strong> Ratings are used for risk classification and reporting. Ensure consistency with external data sources.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <a href="/rating/list" class="btn btn-secondary">Cancel</a>
-    </form>
-</div>
+
+    </div>
+</main>
+
+<footer class="bg-white border-t border-gray-200 mt-16">
+    <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">© 2025 Poseidon.</div>
+</footer>
 </body>
 </html>
