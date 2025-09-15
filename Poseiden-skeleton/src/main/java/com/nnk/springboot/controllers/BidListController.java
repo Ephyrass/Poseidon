@@ -14,7 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.validation.Valid;
 
-
+/**
+ * Spring MVC controller for managing BidList entities.
+ * Provides endpoints to list, add, update, and delete bid lists.
+ * Endpoints are expected to be protected by Spring Security according to application configuration.
+ */
 @Controller
 public class BidListController {
     private final BidListService bidListService;
@@ -24,6 +28,12 @@ public class BidListController {
         this.bidListService = bidListService;
     }
 
+    /**
+     * Display the list of all BidList entries.
+     *
+     * @param model Spring MVC model
+     * @return the bidList/list view
+     */
     @RequestMapping("/bidList/list")
     public String home(Model model)
     {
@@ -31,6 +41,11 @@ public class BidListController {
         return "bidList/list";
     }
 
+    /**
+     * Show the form to create a new BidList.
+     *
+     * @return the bidList/add view
+     */
     @GetMapping("/bidList/add")
     public String addBidForm() {
         return "bidList/add";
@@ -38,9 +53,10 @@ public class BidListController {
 
     /**
      * Validate and save a new BidList entity.
-     * @param bid The BidList entity to validate and save
-     * @param result BindingResult for validation errors
-     * @return Redirects to the bid list page if successful, otherwise returns the add form
+     *
+     * @param bid the BidList entity to validate and save
+     * @param result binding result for validation errors
+     * @return redirect to list on success, or add form on validation error
      */
     @PostMapping("/bidList/validate")
     public String validate(@Valid BidList bid, BindingResult result) {
@@ -52,10 +68,11 @@ public class BidListController {
     }
 
     /**
-     * Show the update form for a BidList entity.
-     * @param id The ID of the BidList to update
+     * Show the update form for an existing BidList.
+     *
+     * @param id the id of the BidList to update
      * @param model Spring MVC model
-     * @return The update form view if found, otherwise redirects to the bid list
+     * @return update form view if found, otherwise redirect to list
      */
     @GetMapping("/bidList/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
@@ -70,10 +87,11 @@ public class BidListController {
 
     /**
      * Update an existing BidList entity.
-     * @param id The ID of the BidList to update
-     * @param bidList The updated BidList entity
-     * @param result BindingResult for validation errors
-     * @return Redirects to the bid list page if successful, otherwise returns the update form
+     *
+     * @param id the id of the BidList to update
+     * @param bidList the updated BidList entity
+     * @param result binding result for validation errors
+     * @return redirect to list on success, or update form on validation error
      */
     @PostMapping("/bidList/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
@@ -87,11 +105,11 @@ public class BidListController {
     }
 
     /**
-     * Delete a BidList entity by its ID.
-     * Checks if the entity exists before deleting and adds an error message if not found.
-     * @param id The ID of the BidList to delete
+     * Delete a BidList entity by id.
+     *
+     * @param id the id of the BidList to delete
      * @param model Spring MVC model
-     * @return Redirects to the bid list page after deletion or if not found
+     * @return redirect to list after deletion or if not found
      */
     @GetMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {

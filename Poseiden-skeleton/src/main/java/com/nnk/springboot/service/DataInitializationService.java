@@ -3,36 +3,41 @@ package com.nnk.springboot.service;
 import com.nnk.springboot.domain.User;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * User data initialization service with BCrypt passwords.
  *
- * This service runs at application startup to create default users
- * with properly encoded passwords in development mode only.
+ * <p>Runs at application startup (only when 'dev' profile is active) and creates
+ * default users with encoded passwords for development and testing.
  */
 @Service
 @Profile("dev")
 public class DataInitializationService implements CommandLineRunner {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
-    public DataInitializationService(UserService userService, PasswordEncoder passwordEncoder) {
+    public DataInitializationService(UserService userService) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Entry point executed at application startup when the 'dev' profile is active.
+     * Triggers initialization of default users required for local development and testing.
+     *
+     * @param args startup arguments passed by the Spring Boot runtime
+     */
     @Override
     @Transactional
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         initializeDefaultUsers();
     }
 
     /**
-     * Initialize default users if they don't already exist.
+     * Create default users (admin and standard user) if they do not already
+     * exist in the database. Passwords provided here are plain text and will
+     * be encoded by UserService.saveWithPasswordEncoding() before persisting.
      */
     private void initializeDefaultUsers() {
         // Create admin user if it doesn't exist

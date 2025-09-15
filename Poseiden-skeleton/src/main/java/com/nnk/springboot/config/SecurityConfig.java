@@ -1,5 +1,6 @@
 package com.nnk.springboot.config;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
 /**
  * Security configuration for the Poseidon application.
@@ -62,16 +64,16 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authz -> authz
-                // Public static resources
-                .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                // Public static resources (use PathRequest to target common locations)
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 // Specific public pages
-                .requestMatchers("/", "/login").permitAll()
+                .requestMatchers("/", "/login", "/user/add", "/user/validate").permitAll()
                 // User management - ADMIN only
                 .requestMatchers("/user/**").hasRole("ADMIN")
                 // All other requests require authentication
                 .anyRequest().authenticated()
             )
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for API endpoints if needed
+            .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for API endpoints if needed (non-deprecated API)
             .headers(headers -> headers
                 .httpStrictTransportSecurity(hstsConfig -> hstsConfig
                     .maxAgeInSeconds(31536000)
