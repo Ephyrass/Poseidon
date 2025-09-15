@@ -28,9 +28,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
  *   <li>Custom error pages</li>
  * </ul>
  *
- * @author Poseidon Team
- * @version 1.0
- * @since 1.0
  */
 @Configuration
 public class SecurityConfig {
