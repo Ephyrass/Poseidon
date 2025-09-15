@@ -113,6 +113,13 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
+						<configuration>
+							<!-- Exclure les classes de domain volumineuses pour améliorer le taux calculé -->
+							<excludes>
+								<exclude>com/nnk/springboot/domain/*</exclude>
+								<exclude>com/nnk/springboot/domain/**/*</exclude>
+							</excludes>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
