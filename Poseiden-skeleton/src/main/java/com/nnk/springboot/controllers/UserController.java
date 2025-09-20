@@ -153,11 +153,21 @@ public class UserController {
      */
     @GetMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id, Model model) {
-        if (userService.existsById(id)) {
-            userService.deleteById(id);
-        } else {
+        Optional<User> targetUser = userService.findById(id);
+        if (targetUser.isEmpty()) {
             model.addAttribute("errorMessage", "User not found for deletion.");
+            return "redirect:/user/list";
         }
+
+        // Prevent deleting users with ADMIN role. Only allow deletion when target role is USER.
+        User user = targetUser.get();
+        if ("ADMIN".equalsIgnoreCase(user.getRole())) {
+            model.addAttribute("errorMessage", "Deletion not allowed: target user has ADMIN role.");
+            return "redirect:/user/list";
+        }
+
+        // Safe to delete (target is not ADMIN)
+        userService.deleteById(id);
         return "redirect:/user/list";
     }
 }
